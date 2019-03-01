@@ -4,5 +4,46 @@
     background: white;
     width: 350px;
     margin: 5px;
-
+}
+.squareBtn{
+    width: 30px;
+    height: 30px;
+    background-color: #dedede;
+    position: absolute;
+    border: 1px solid #8e8e8e;
+    border-radius: 3px;
+    background-size: 23px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.squareBtn:hover{
+    background-color: #b8eb92;
+}
+.squareBtn:active{
+    background-color: #9feb65;
+}
+.add{
+    top: 88px;
+    left: 250px;
+    background-image: url("../../resources/images/plus.png");
+}
+.edit{
+    top: 88px;
+    left: 284px;
+    background-image: url("../../resources/images/edit.png");
+}
+.remove{
+    top: 88px;
+    left: 318px;
+    background-image: url("../../resources/images/dustbin.png");
+}
+.remove:hover{
+    background-color: #eb9292;
+}
+.remove:active{
+    background-color: #ec8282;
+}
+.listHeight{
+    height: calc(100% - 70px);
+    overflow: auto;
 }

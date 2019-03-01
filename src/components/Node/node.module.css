@@ -1,0 +1,29 @@
+.node{
+    background: white;
+    font-size: 15px;
+    text-transform: capitalize;
+    padding: 5px 0 5px 10px;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    border-width: 1px 5px 1px 5px;
+    border-color: white;
+    border-style: solid;
+    width: calc(100% - 20px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.node:hover{
+    background-color: #b8eb92;
+    border-color: #b8eb92;
+    font-weight: 600;
+}
+.selected{
+    border-color: #b8eb92;
+    font-weight: 600;
+}

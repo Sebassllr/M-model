@@ -1,0 +1,32 @@
+div .Input{
+    height: 10px;
+    padding: 5px 10px;
+    border: 1px solid #cccccc;
+    background: #f7f7f7;
+    border-radius: 3px;
+    width: calc(100% - 15px);
+}
+div .Input:focus{
+    border-color: #b0e28d;
+    background: #ececec;
+}
+textarea.Input{
+    height: 200px;
+    resize: none;
+}
+.width100{
+    width: 100%;
+}
+.div{
+    flex-direction: column;
+    margin-bottom: 5px;
+}
+.Label{
+    font-size: 13px;
+    font-weight: 100;
+    color: black;
+    margin-bottom: 5px;
+}
+.Label::first-letter{
+    text-transform: capitalize;
+}
