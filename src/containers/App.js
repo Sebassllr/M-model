@@ -4,9 +4,7 @@ import MainView from '../containers/MainView/mainView';
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'localhost:3001/';
-axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN'; 
-axios.defaults.headers.post['Content-type'] = 'application/json';
+axios.defaults.baseURL = 'http://localhost:3001/';
 
 class App extends Component {
   render() {
@@ -21,4 +19,3 @@ class App extends Component {
 }
 
 export default App;
-

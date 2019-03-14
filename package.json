@@ -5,8 +5,10 @@
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.8.3",
+    "react-awesome-modal": "^2.0.5",
     "react-dom": "^16.8.3",
     "react-modal": "^3.8.1",
+    "react-notifications": "^1.4.3",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.5"

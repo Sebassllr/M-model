@@ -5,8 +5,9 @@ import classes from './list.module.css'
 const List = props => {
     return(
         <div className={classes.list}>
-            {props.list ? props.list.map((i, index) => {
-                return (<Node key={index} name={i.name} selected={props.selected} />)
+            {props.list ? props.list.map(i => {
+                return (<Node nodeClick={props.nodeClick} 
+                    key={i._id} id={i._id} name={i.name} selected={i.selected} />)
             }) : null}
         </div>
     );

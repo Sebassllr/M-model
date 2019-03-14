@@ -17,7 +17,6 @@ const input = props => {
             break;
         default: 
             input = <input className={[classes.Input, classes.width100].join(" ")} {...props}/>
-        
     }
 
     return(

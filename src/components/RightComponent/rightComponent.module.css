@@ -5,3 +5,21 @@
     width: calc(100% - 360px);
     margin: 5px;
 }
+.title{
+    font-weight: 600;
+}
+.marginTitles{
+    margin: 5px 5px;
+}
+.List{
+    flex-direction: column;
+    margin: 0;
+    padding-right: 5px;
+}
+.List li{
+    font-weight: 100;
+    font-size: 14px;
+    margin: 0;
+    height: min-content;
+    padding: 5px;
+}

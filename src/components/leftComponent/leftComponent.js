@@ -1,7 +1,7 @@
 import classes from './leftComponent.module.css';
 import React from 'react';
-import Title from '../Title/title'
-import List from '../List/list'
+import Title from '../Title/title';
+import List from '../List/list';
 
 const leftComponent = props => {
     
@@ -11,20 +11,11 @@ const leftComponent = props => {
         (<input onClick={props.deleteClick} className={[classes.remove, classes.squareBtn].join(" ")} type="button" key="3"/>),
     ];
 
-    const obj = {
-        name: 'nombre'
-    }
-    
-    const list = [];
-    list.push(obj);
-    list.push(obj);
-    list.push(obj);
-
     return(
         <div className={classes.box}>
             <Title buttons={buttonList} title="Modelos" />
             <div className={classes.listHeight}>
-                <List list={list}/>
+                <List nodeClick={props.nodeClick} list={props.list}/>
             </div>
         </div>
     );

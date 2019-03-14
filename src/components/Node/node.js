@@ -9,7 +9,8 @@ const Node = props => {
     }
 
     return(
-        <div className={styles.join(" ")} onClick={props.click}>
+        <div onClick={event => { props.nodeClick(event, props.id) }} 
+            className={styles.join(" ")}>
             {props.name}
         </div>
     )
