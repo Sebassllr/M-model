@@ -6,6 +6,8 @@ import classes from './administrator.module.css';
 import LeftComponent from '../../components/leftComponent/leftComponent';
 import RightComponent from '../../components/RightComponent/rightComponent';
 import Axios from 'axios';
+import 'react-notifications/lib/notifications.css';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 class Administrator extends Component {
 
@@ -53,6 +55,9 @@ class Administrator extends Component {
         }
     }
 
+    /**
+     * Obtiene todos los modelos creados
+     */
     getAllModels = () => {
         Axios.get('getAllModels')
         .then(response => {
@@ -65,6 +70,9 @@ class Administrator extends Component {
         });
     }
 
+    /**
+     * Evento de click del árbol de modelos
+     */
     nodeClick = (event, nodeId) => {
         const id = {id: nodeId};
         this.selectedNode(nodeId);
@@ -76,6 +84,9 @@ class Administrator extends Component {
         });
     }
 
+    /**
+     * Método que selecciona el nodo
+     */
     selectedNode = id => {
         const newModel = [...this.state.models];
         newModel.forEach(i => {
@@ -88,19 +99,24 @@ class Administrator extends Component {
         this.setState({models: newModel});
     }
 
-
+    /**
+     * Método encargado de cerrar el pop up de información de la actividad seleccionada
+     */
     closePopUp = () => {
         this.setState({
             showPopUp: false
         });
     }
 
+    /**
+     * Método encargado de abrir el pop up con la información de la actividad seleccionada
+     */
     openPopUp = id => {
         console.log("Estoy acá");
         const toSendObj = {
             id: id
         }
-        Axios.post('getActivityById', toSendObj)
+        Axios.post(this.props.url, toSendObj)
         .then((response) => {
             const data = response.data;
             const selectedActivityData  = {
@@ -111,12 +127,15 @@ class Administrator extends Component {
             this.setState({
                 showPopUp: true, selectedActivity: selectedActivityData
             });
-            console.log(selectedActivityData);
         });
-        
     }
 
     render(){
+        const hrStyle = {
+            width: '100%',
+            'margin-bottom': '10px'
+        }
+
         return(
             <div className={[classes.greyBackground, classes.fullHeight, "displayFlex"].join(" ")}>
                 <LeftComponent 
@@ -136,6 +155,7 @@ class Administrator extends Component {
                 >
                     <div className={classes.modal}>
                         <h1>{this.state.selectedActivity.name}</h1>
+                        <hr style={hrStyle}/>
                         <p>{this.state.selectedActivity.description}</p>
                         <p>{this.state.selectedActivity.objective}</p>
                     </div>
@@ -148,10 +168,11 @@ class Administrator extends Component {
                 <ReactModal isOpen={this.state.openModal} >
                     <AddModel closeModal={this.closeModal}/>
                 </ReactModal>
+                <NotificationContainer />
             </div>
+            
         )
     }
-
 }
 
 export default Administrator;

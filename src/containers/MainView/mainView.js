@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Administrator from '../Administrator/administrator';
 import Graph from '../Graph/graph';
 import { Route, Link } from 'react-router-dom';
+import MainMenu from '../MainMenu/mainMenu'
 
 class MainView extends Component {
 
@@ -27,7 +28,8 @@ class MainView extends Component {
                   <hr/>
                 </ol>
               </nav>
-              <Route path="/admin" exact component={Administrator} />
+              <Route path="/admin" component={MainMenu}/>
+              <Route path="/admin/model" exact component={Administrator} />
               <Route path="/graph" exact component={Graph} />
             </div>
           );

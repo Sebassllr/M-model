@@ -101,6 +101,7 @@ class AddModel extends Component{
                                             name="Descripción" 
                                             type="textarea"/>
                                     </div>
+                                
                                     <div style={inputDescStyle}>
                                         <Input  
                                             value={this.state.activity.objective} 
@@ -114,7 +115,6 @@ class AddModel extends Component{
                         </div>
                     </div>
                 </form>
-                <NotificationContainer />
                 <button type="button" onClick={this.saveModel}>Guardar</button>
                 <button type="button" onClick={this.props.closeModal}>Cancelar</button>
             </>
