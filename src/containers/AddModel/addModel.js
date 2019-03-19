@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import Input from "../../components/Input/input"
 import classes from './addModel.module.css';
 import Title from '../../components/Title/title';
+import Table from '../../components/Table/table';
 import axios from 'axios';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+
 
 class AddModel extends Component{
 
@@ -68,6 +70,10 @@ class AddModel extends Component{
     }
 
     render(){
+        const combo = {
+            height: '25px',
+            'padding': '0px 10px' 
+        };
         const styles = {
             height: '282px'
         };
@@ -80,6 +86,16 @@ class AddModel extends Component{
             width: 'calc(50% - 5px)',
             margin: '5px 10px'
         };
+        const products = [{
+            value: 1,
+            name: "Product1",
+        }, {
+            value: 2,
+            name: "Product2",
+        }, {
+            value:32,
+            name: "Product2",
+        }];
 
         return(
             <>
@@ -89,29 +105,16 @@ class AddModel extends Component{
                             <Input value={this.state.inputs.name} onChange={(event) => {this.inputHandler(event, 1)}} name="Nombre" type="input" required/>
                             <Input style={styles} value={this.state.description} onChange={(event) => {this.inputHandler(event, 2)}} name="Descripción" type="textarea"/>
                         </div>
-                        <div className={[classes.widthRigth, classes.border].join(" ")}>
-                            <Title titleStyle={titleStyle} title="Actividades"/>
-                            <div className={classes.paddingInputs}>
-                                <Input value={this.state.activity.name} onChange={(event) => {this.inputHandler(event, 3)}} name="Nombre" type="input" required/>
-                                <div className={'displayFlex'}>
-                                    <div style={inputDescStyle} >
-                                        <Input 
-                                            value={this.state.activity.description} 
-                                            onChange={ event => {this.inputHandler(event, 4)} } 
-                                            name="Descripción" 
-                                            type="textarea"/>
-                                    </div>
-                                
-                                    <div style={inputDescStyle}>
-                                        <Input  
-                                            value={this.state.activity.objective} 
-                                            onChange={event => { this.inputHandler(event, 5)} } 
-                                            name="Objetivo" 
-                                            type="textarea"/>
-                                    </div>
-                                </div>
-                                <button type="button" onClick={this.addActivity}>Agregar</button>
+                        <div className = {classes.widthRigth}>
+                            <div className= {["displayFlex", classes.combo].join(" ")}>
+                                <Input  style={combo} type = 'select' options = {products} name = "Objetivos" required/>
+                                <div  className = {classes.button}><button type="button" onClick={this.saveModel}>Guardar</button></div>
                             </div>
+                            <div className= {classes.table}>
+                                <Table >
+                                </Table>
+                                <button type="button" onClick={this.props.closeModal}>Eliminar</button>
+                            </div>  
                         </div>
                     </div>
                 </form>
