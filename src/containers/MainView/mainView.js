@@ -29,7 +29,49 @@ class MainView extends Component {
                 </ol>
               </nav>
               <Route path="/admin" component={MainMenu}/>
-              <Route path="/admin/model" exact component={Administrator} />
+              <Route 
+                    path="/admin/model" 
+                    exact 
+                    render={(props) => 
+                      <Administrator
+                        singleMainView={'getModelById'} 
+                        singleChild={'getActivityById'}
+                        all={'getAllModels'}
+                        name={"Modelos"}
+                        child={"Objetivos"}/>
+              }/>
+              <Route 
+                    path="/admin/objectives" 
+                    exact 
+                    render={(props) => 
+                      <Administrator
+                        singleMainView={'getModelById'} 
+                        singleChild={'getActivityById'}
+                        all={'getAllModels'}
+                        name={"Objetivos"}
+                        child={"Actividades"}/>
+              }/>
+              <Route 
+                    path="/admin/activities" 
+                    exact 
+                    render={(props) => 
+                      <Administrator
+                        singleMainView={'getModelById'} 
+                        singleChild={'getActivityById'}
+                        all={'getAllModels'}
+                        name={"Actividades"}
+                        child={"Técnicas"}/>
+              }/>
+              <Route 
+                    path="/admin/tecnics" 
+                    exact 
+                    render={(props) => 
+                      <Administrator
+                        singleMainView={'getModelById'} 
+                        singleChild={'getActivityById'}
+                        all={'getAllModels'}
+                        name={'Técnicas'}/>
+              }/>
               <Route path="/graph" exact component={Graph} />
             </div>
           );

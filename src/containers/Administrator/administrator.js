@@ -59,7 +59,7 @@ class Administrator extends Component {
      * Obtiene todos los modelos creados
      */
     getAllModels = () => {
-        Axios.get('getAllModels')
+        Axios.get(this.props.all)
         .then(response => {
             console.log(response.data);
             const models = response.data;
@@ -76,7 +76,7 @@ class Administrator extends Component {
     nodeClick = (event, nodeId) => {
         const id = {id: nodeId};
         this.selectedNode(nodeId);
-        Axios.post('getModelById', id)
+        Axios.post(this.props.singleMainView, id)
         .then(response => {
             console.log(response.data);
             const data = response.data;
@@ -116,7 +116,7 @@ class Administrator extends Component {
         const toSendObj = {
             id: id
         }
-        Axios.post(this.props.url, toSendObj)
+        Axios.post(this.props.singleChild, toSendObj)
         .then((response) => {
             const data = response.data;
             const selectedActivityData  = {
@@ -139,6 +139,7 @@ class Administrator extends Component {
         return(
             <div className={[classes.greyBackground, classes.fullHeight, "displayFlex"].join(" ")}>
                 <LeftComponent 
+                    title={this.props.name}
                     addClick={this.addClickHandler} 
                     editClick={this.editClickHandler} 
                     deleteClick={this.deleteClickHandler}
@@ -164,7 +165,8 @@ class Administrator extends Component {
                     name={this.state.selectedNode.name} 
                     description={this.state.selectedNode.description}
                     activities={this.state.selectedNode.activities} 
-                    showPopUp={this.openPopUp}/>
+                    showPopUp={this.openPopUp}
+                    child={this.props.child}/>
                 <ReactModal isOpen={this.state.openModal} >
                     <AddModel closeModal={this.closeModal}/>
                 </ReactModal>

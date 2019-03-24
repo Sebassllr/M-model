@@ -20,13 +20,13 @@ class MainMenu extends Component {
             },
             {
                 id: 3,
-                to:'/admin/activites',
+                to:'/admin/activities',
                 text: 'Actividades',
                 selected: false,
             },
             {
                 id: 4,
-                to:'/admin/tenics',
+                to:'/admin/tecnics',
                 text: 'Técnicas',
                 selected: false,
             },

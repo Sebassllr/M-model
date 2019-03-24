@@ -13,7 +13,7 @@ const leftComponent = props => {
 
     return(
         <div className={classes.box}>
-            <Title buttons={buttonList} title="Modelos" />
+            <Title buttons={buttonList} title={props.title} />
             <div className={classes.listHeight}>
                 <List nodeClick={props.nodeClick} list={props.list}/>
             </div>
