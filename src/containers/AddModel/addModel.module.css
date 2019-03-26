@@ -14,6 +14,9 @@
     padding: 5px 20px 5px 10px;
     margin-top: 5px;
 }
+.formGrid{
+    grid-area: a;
+}
 .table{
     width: calc(100% - 15px);
     margin-left: 15px;
@@ -24,9 +27,62 @@
     display: flex;
     
 }
-.button > button{
-    margin: auto;
-}
 .combo{
     height: 50px;
+}
+.addButton{
+    background-color: #4CAF50;
+    border: 1px solid rgb(66, 151, 69);
+    color: white;
+    height: 45px;
+    width: 45px;
+    line-height: 11px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+    font-size: 39px;
+}
+.addButton:hover{
+    background-color: rgb(66, 151, 69);
+}
+.formPadding{
+    padding: 10px 10px;
+}
+
+.btnCancel{
+    grid-area: c;
+}
+.btnSave{
+    grid-area: b;
+}
+.formButtons{
+    justify-content: flex-end;
+    grid-area: c;
+    margin-bottom: 10px;
+    margin-top: 4px;
+    border-radius: 3px;
+}
+.bottomButtons{
+    border-top: 1px solid #cccccc;
+    background-color: #8e8e8e;
+}
+.paddingButtons{
+    /*padding: 0 10px;*/
+}
+.grid{
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);  
+    grid-template-areas: 
+      "a"     
+      "c";
+}
+.displayGrid{
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 5px;
+    grid-template-areas: 
+    "a a c b";
+    height: 25px;
 }

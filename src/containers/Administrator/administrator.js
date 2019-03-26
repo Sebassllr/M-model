@@ -133,7 +133,7 @@ class Administrator extends Component {
     render(){
         const hrStyle = {
             width: '100%',
-            'margin-bottom': '10px'
+            'marginBottom': '10px'
         }
 
         return(
@@ -167,12 +167,16 @@ class Administrator extends Component {
                     activities={this.state.selectedNode.activities} 
                     showPopUp={this.openPopUp}
                     child={this.props.child}/>
-                <ReactModal isOpen={this.state.openModal} >
+                <Modal 
+                    visible={this.state.openModal}
+                    width="700"
+                    height="450"
+                    effect="fadeInUp"
+                    >
                     <AddModel closeModal={this.closeModal}/>
-                </ReactModal>
+                </Modal>
                 <NotificationContainer />
             </div>
-            
         )
     }
 }

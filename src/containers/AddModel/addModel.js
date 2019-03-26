@@ -4,7 +4,7 @@ import classes from './addModel.module.css';
 import Title from '../../components/Title/title';
 import Table from '../../components/Table/table';
 import axios from 'axios';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationManager } from 'react-notifications';
 
 
 class AddModel extends Component{
@@ -69,6 +69,10 @@ class AddModel extends Component{
         });
     }
 
+    addToTable = () => {
+        
+    }
+
     render(){
         const combo = {
             height: '25px',
@@ -78,14 +82,6 @@ class AddModel extends Component{
             height: '282px'
         };
 
-        const titleStyle = {
-            height: '35px'
-        };
-
-        const inputDescStyle = {
-            width: 'calc(50% - 5px)',
-            margin: '5px 10px'
-        };
         const products = [{
             value: 1,
             name: "Product1",
@@ -98,8 +94,8 @@ class AddModel extends Component{
         }];
 
         return(
-            <>
-                <form>
+            <div className={classes.grid}>
+                <form className={[classes.formGrid, classes.formPadding].join(" ")}>
                     <div className="displayFlex">
                         <div className={classes.widthLeft}>
                             <Input value={this.state.inputs.name} onChange={(event) => {this.inputHandler(event, 1)}} name="Nombre" type="input" required/>
@@ -107,20 +103,32 @@ class AddModel extends Component{
                         </div>
                         <div className = {classes.widthRigth}>
                             <div className= {["displayFlex", classes.combo].join(" ")}>
-                                <Input  style={combo} type = 'select' options = {products} name = "Objetivos" required/>
-                                <div  className = {classes.button}><button type="button" onClick={this.saveModel}>Guardar</button></div>
+                                <Input style={combo} type='select' options={products} name="Objetivos" required/>
+                                <div className={classes.button}>
+                                    <button type="button" className={classes.addButton} onClick={this.addToTable}>+</button>
+                                </div>
                             </div>
                             <div className= {classes.table}>
-                                <Table >
+                                <Table>
                                 </Table>
                                 <button type="button" onClick={this.props.closeModal}>Eliminar</button>
                             </div>  
                         </div>
                     </div>
                 </form>
-                <button type="button" onClick={this.saveModel}>Guardar</button>
-                <button type="button" onClick={this.props.closeModal}>Cancelar</button>
-            </>
+                <div className={
+                    [
+                        classes.displayGrid,
+                        classes.paddingButtons, 
+                        classes.bottomButtons, 
+                        "displayFlex", 
+                        classes.formButtons
+                    ].join(" ")}>
+
+                    <button className={classes.btnCancel} type="button" onClick={this.props.closeModal}>Cancelar</button>
+                    <button className={classes.btnSave} type="button" onClick={this.saveModel}>Guardar</button>
+                </div>
+            </div>
         )
     }
 }
