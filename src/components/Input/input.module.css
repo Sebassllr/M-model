@@ -12,7 +12,7 @@ div .Input:focus{
     background: #ececec;
 }
 textarea.Input{
-    height: 170px !important;
+    height: 170px;
     resize: none;
 }
 .width100{

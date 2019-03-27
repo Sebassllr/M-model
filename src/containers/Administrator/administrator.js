@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactModal from 'react-modal';
 import Modal from 'react-awesome-modal';
 import AddModel from '../AddModel/addModel';
 import classes from './administrator.module.css';
@@ -7,7 +6,7 @@ import LeftComponent from '../../components/leftComponent/leftComponent';
 import RightComponent from '../../components/RightComponent/rightComponent';
 import Axios from 'axios';
 import 'react-notifications/lib/notifications.css';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationContainer } from 'react-notifications';
 
 class Administrator extends Component {
 
@@ -170,10 +169,10 @@ class Administrator extends Component {
                 <Modal 
                     visible={this.state.openModal}
                     width="700"
-                    height="450"
+                    height="357"
                     effect="fadeInUp"
                     >
-                    <AddModel closeModal={this.closeModal}/>
+                    <AddModel child={this.props.child} closeModal={this.closeModal}/>
                 </Modal>
                 <NotificationContainer />
             </div>

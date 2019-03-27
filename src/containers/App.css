@@ -97,3 +97,21 @@ li > a > span.text{
 .redRequired{
   color: #da0000;
 }
+.btn-warning{
+  position: absolute;
+  top: 167px;
+  left: 258px;
+  border-radius: 3px;
+  border: 1px solid #cccccc;
+  background-color: #f1f1f1;
+  background-image: url('../resources/images/dustbin.png');
+  background-repeat: no-repeat;
+  background-size: 22px 18px;
+  height: 25px;
+  width: 25px;
+  background-position: 1px 3px;
+  cursor: pointer;
+}
+.btn-warning:hover{
+  background-color: #cccccc;
+}

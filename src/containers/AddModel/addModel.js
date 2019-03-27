@@ -79,7 +79,7 @@ class AddModel extends Component{
             'padding': '0px 10px' 
         };
         const styles = {
-            height: '282px'
+            height: '127px'
         };
 
         const products = [{
@@ -93,11 +93,19 @@ class AddModel extends Component{
             name: "Product2",
         }];
 
+        const objectiveTitle = {
+            height: '31px',
+            fontSize: '12px',
+            backgroundColor: '#cccccc8a'
+        };
+
         return(
             <div className={classes.grid}>
                 <form className={[classes.formGrid, classes.formPadding].join(" ")}>
-                <Title className = {classes.formGrid }></Title>
-                    <div className="displayFlex">
+                    <Title titleStyle={{
+                        border: '1px solid #8e8e8e'
+                    }} title="Agregar Modelo"/>
+                    <div className={[classes.margin, "displayFlex"].join(' ')} >
                     
                         <div className={classes.widthLeft}>
                             <Input value={this.state.inputs.name} onChange={(event) => {this.inputHandler(event, 1)}} name="Nombre" type="input" required/>
@@ -111,9 +119,12 @@ class AddModel extends Component{
                                 </div>
                             </div>
                             <div className= {classes.table}>
-                                <Table>
-                                </Table>
-                                <button type="button" onClick={this.props.closeModal}>Eliminar</button>
+                                <div className={classes.tableContainer}>
+                                    <Title titleStyle={objectiveTitle} title={this.props.child}/>
+                                    <div>
+                                        <Table />                                
+                                    </div>
+                                </div>
                             </div>  
                         </div>
                     </div>
