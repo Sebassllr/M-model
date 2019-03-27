@@ -26,7 +26,7 @@ import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-a
 
     render() {
       return (
-        <BootstrapTable opctions = {{noDataText : 'sin datos'}} data = {this.products} selectRow={ this.selectRowProp } bordered={ true}>
+        <BootstrapTable opctions = {{noDataText : 'sin datos'}} deleteRow = {  true  } data = {this.products} selectRow={ this.selectRowProp } bordered={ true}>
             <TableHeaderColumn dataField='id' isKey>Objetivos</TableHeaderColumn>
             <TableHeaderColumn dataField='name' >Descripción</TableHeaderColumn>
         </BootstrapTable>

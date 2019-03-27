@@ -5,13 +5,14 @@ div .Input{
     background: #f7f7f7;
     border-radius: 3px;
     width: calc(100% - 15px);
+    margin-left: 15px;
 }
 div .Input:focus{
     border-color: #b0e28d;
     background: #ececec;
 }
 textarea.Input{
-    height: 200px;
+    height: 170px !important;
     resize: none;
 }
 .width100{
@@ -26,6 +27,8 @@ textarea.Input{
     font-weight: 100;
     color: black;
     margin-bottom: 5px;
+    font-weight: bold;
+    margin-left: 16px;
 }
 .Label::first-letter{
     text-transform: capitalize;

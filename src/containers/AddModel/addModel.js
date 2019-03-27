@@ -96,7 +96,9 @@ class AddModel extends Component{
         return(
             <div className={classes.grid}>
                 <form className={[classes.formGrid, classes.formPadding].join(" ")}>
+                <Title className = {classes.formGrid }></Title>
                     <div className="displayFlex">
+                    
                         <div className={classes.widthLeft}>
                             <Input value={this.state.inputs.name} onChange={(event) => {this.inputHandler(event, 1)}} name="Nombre" type="input" required/>
                             <Input style={styles} value={this.state.description} onChange={(event) => {this.inputHandler(event, 2)}} name="Descripción" type="textarea"/>

@@ -34,7 +34,7 @@
     background-color: #4CAF50;
     border: 1px solid rgb(66, 151, 69);
     color: white;
-    height: 45px;
+    height: 25px;
     width: 45px;
     line-height: 11px;
     text-align: center;
@@ -43,6 +43,8 @@
     font-size: 16px;
     border-radius: 12px;
     font-size: 39px;
+    margin-top: auto;
+    margin-left: 16px;
 }
 .addButton:hover{
     background-color: rgb(66, 151, 69);
@@ -66,7 +68,7 @@
 }
 .bottomButtons{
     border-top: 1px solid #cccccc;
-    background-color: #8e8e8e;
+    background-color:  #b1e28da3;
 }
 .paddingButtons{
     /*padding: 0 10px;*/
