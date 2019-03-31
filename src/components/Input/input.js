@@ -12,7 +12,7 @@ const input = props => {
             break;
         case 'select': 
             input = (<select className={[classes.Input, classes.width100].join(" ")} {...props} >
-                        {props.options.map(i => <option value={i.value}>{i.name}</option>)}
+                        {props.options.map(i => <option key={i._id} value={JSON.stringify(i)}>{i.name}</option>)}
                     </select>);
             break;
         default: 
@@ -21,7 +21,9 @@ const input = props => {
 
     return(
         <div className={[classes.width100, classes.div, "displayFlex"].join(" ")} >
-            <label className={[classes.width100, classes.Label].join(" ")}>{props.required ? <span className="redRequired">* </span> : null} {props.name}</label>
+            <label className={[classes.width100, classes.Label].join(" ")}>
+                {props.required ? <span className="redRequired">* </span> : null} {props.name}
+            </label>
             {input}
         </div>
     );

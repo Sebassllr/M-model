@@ -16,10 +16,10 @@ class Administrator extends Component {
         selectedNode: {
             name: "",
             description: "",
-            activities: []
+            child: []
         },
         showPopUp: false,
-        selectedActivity: {
+        selectedChild: {
             name: '',
             description: '',
             objective: '',
@@ -58,7 +58,7 @@ class Administrator extends Component {
      * Obtiene todos los modelos creados
      */
     getAllModels = () => {
-        Axios.get(this.props.all)
+        Axios.post(this.props.all, {modelStr: this.props.name})
         .then(response => {
             console.log(response.data);
             const models = response.data;
@@ -73,29 +73,41 @@ class Administrator extends Component {
      * Evento de click del árbol de modelos
      */
     nodeClick = (event, nodeId) => {
-        const id = {id: nodeId};
+        //const id = {id: nodeId, modelStr: this.props.name};
         this.selectedNode(nodeId);
-        Axios.post(this.props.singleMainView, id)
-        .then(response => {
-            console.log(response.data);
-            const data = response.data;
-            this.setState({selectedNode: data});
-        });
     }
 
     /**
      * Método que selecciona el nodo
      */
     selectedNode = id => {
+
         const newModel = [...this.state.models];
+        let selectedNode = {};
         newModel.forEach(i => {
             if(i._id === id){
+                selectedNode = {name: i.name, description: i.description};
+                selectedNode.children = i[this.props.childB];
                 i.selected = true;
             }else{
                 i.selected = false;
             }
         });
-        this.setState({models: newModel});
+        if(this.props.childB){
+            this.showChild(newModel, selectedNode);    
+        }else{
+            this.setState({models: newModel, selectedNode: selectedNode});
+        }
+    }
+
+    showChild = (newModel, selectedNode)=> {
+        Axios
+        .post('getAllChildren', {childStr: this.props.child, children: selectedNode.children})
+        .then(response => {
+            console.log(response);
+            selectedNode.children = response.data;
+            this.setState({models: newModel, selectedNode: selectedNode});
+        });
     }
 
     /**
@@ -111,28 +123,27 @@ class Administrator extends Component {
      * Método encargado de abrir el pop up con la información de la actividad seleccionada
      */
     openPopUp = id => {
-        console.log("Estoy acá");
-        const toSendObj = {
-            id: id
+        
+        const item = this.state.selectedNode.children.filter(i => id === i._id)[0];
+        const selected = {
+            name: item.name,
+            description: item.description,
         }
-        Axios.post(this.props.singleChild, toSendObj)
-        .then((response) => {
-            const data = response.data;
-            const selectedActivityData  = {
-                name: data.name,
-                description: data.description,
-                objective: data.objective,
-            }
-            this.setState({
-                showPopUp: true, selectedActivity: selectedActivityData
-            });
-        });
+        this.setState({selectedChild: selected, showPopUp: true});
+        console.log(item);
     }
 
     render(){
         const hrStyle = {
             width: '100%',
             'marginBottom': '10px'
+        }
+        let size = {
+            width: "700",
+            height: "357"
+        }
+        if(!this.props.childB){
+            size.width = '350';
         }
 
         return(
@@ -145,7 +156,7 @@ class Administrator extends Component {
                     buttons={this.state.buttons}
                     list={this.state.models}
                     nodeClick={this.nodeClick}
-                    />
+                />
                 <Modal 
                     visible={this.state.showPopUp}
                     width="400"
@@ -154,25 +165,33 @@ class Administrator extends Component {
                     onClickAway={() => this.closePopUp()}
                 >
                     <div className={classes.modal}>
-                        <h1>{this.state.selectedActivity.name}</h1>
+                        <h1>{this.state.selectedChild.name}</h1>
                         <hr style={hrStyle}/>
-                        <p>{this.state.selectedActivity.description}</p>
-                        <p>{this.state.selectedActivity.objective}</p>
+                        <p>{this.state.selectedChild.description}</p>
                     </div>
                 </Modal>
                 <RightComponent 
                     name={this.state.selectedNode.name} 
                     description={this.state.selectedNode.description}
-                    activities={this.state.selectedNode.activities} 
+                    children={this.state.selectedNode.children} 
                     showPopUp={this.openPopUp}
                     child={this.props.child}/>
                 <Modal 
                     visible={this.state.openModal}
-                    width="700"
-                    height="357"
+                    width={size.width}
+                    height={size.height}
                     effect="fadeInUp"
                     >
-                    <AddModel child={this.props.child} closeModal={this.closeModal}/>
+                        {!this.state.openModal ? null:                     
+                            <AddModel 
+                                childB={this.props.childB} 
+                                getChild={this.props.getChildrenData} 
+                                title={this.props.name} 
+                                child={this.props.child} 
+                                closeModal={this.closeModal}
+                                childField={this.props.childB}/>
+                        }
+
                 </Modal>
                 <NotificationContainer />
             </div>

@@ -17,7 +17,7 @@ const rightComponent = props => {
             </div>
             <div className={[classes.title, classes.marginTitles].join(" ")}>{props.child}</div>
             <ol className={classes.List}>
-                {props.activities ? props.activities.map(i => <li onClick={(event) => {
+                {props.children ? props.children.map(i => <li onClick={(event) => {
                     props.showPopUp(i._id);
                 }} key={i._id}>{i.name}</li> ) : null}
             </ol>

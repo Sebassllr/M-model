@@ -115,3 +115,6 @@ li > a > span.text{
 .btn-warning:hover{
   background-color: #cccccc;
 }
+.react-bs-table-container{
+  height: 75px;
+}

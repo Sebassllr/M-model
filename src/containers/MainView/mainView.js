@@ -36,9 +36,11 @@ class MainView extends Component {
                       <Administrator
                         singleMainView={'getModelById'} 
                         singleChild={'getActivityById'}
+                        getChildrenData={'getAllObjetives'}
                         all={'getAllModels'}
                         name={"Modelos"}
-                        child={"Objetivos"}/>
+                        child={"Objetivos"}
+                        childB={'objectives'}/>
               }/>
               <Route 
                     path="/admin/objectives" 
@@ -48,8 +50,10 @@ class MainView extends Component {
                         singleMainView={'getModelById'} 
                         singleChild={'getActivityById'}
                         all={'getAllModels'}
+                        getChildrenData={'getAllObjetives'}
                         name={"Objetivos"}
-                        child={"Actividades"}/>
+                        child={"Actividades"}
+                        childB={'activities'}/>
               }/>
               <Route 
                     path="/admin/activities" 
@@ -59,8 +63,10 @@ class MainView extends Component {
                         singleMainView={'getModelById'} 
                         singleChild={'getActivityById'}
                         all={'getAllModels'}
+                        getChildrenData={'getAllObjetives'}
                         name={"Actividades"}
-                        child={"Técnicas"}/>
+                        child={"Tecnicas"}
+                        childB={'technique'}/>
               }/>
               <Route 
                     path="/admin/tecnics" 
@@ -69,8 +75,10 @@ class MainView extends Component {
                       <Administrator
                         singleMainView={'getModelById'} 
                         singleChild={'getActivityById'}
+                        getChildrenData={'getAllObjetives'}
                         all={'getAllModels'}
-                        name={'Técnicas'}/>
+                        name={'Tecnicas'}
+                        childB={null}/>
               }/>
               <Route path="/graph" exact component={Graph} />
             </div>

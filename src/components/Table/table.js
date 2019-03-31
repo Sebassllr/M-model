@@ -3,46 +3,31 @@ import './table.css'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
-  class SelectBgColorTable extends React.Component {
+class SelectBgColorTable extends React.Component {
 
-    render() {
-            
-      const selectRowProp = {
-          mode: 'checkbox',
-          bgColor: '#b8eb92'
-      };
-
-      const products = [{
-          id: 1,
-          name: "Product1",
-          price: 120
-      }, {
-          id: 2,
-          name: "Product2",
-          price: 80
-      }, {
-          id:32,
-          name: "Product2",
-          price: 80
-      }];
-
-      return (
-        <BootstrapTable 
-          options={
-            {
-              noDataText : 'sin datos',
-              deleteText: " ",
-            }
-          } 
-          deleteRow={  true  } 
-          data={ products } 
-          selectRow={ selectRowProp } 
-          bordered={true}
-          btnText="HOLAAAA">
-            <TableHeaderColumn dataField='id' isKey>Objetivos</TableHeaderColumn>
-            <TableHeaderColumn dataField='name' >Descripción</TableHeaderColumn>
-        </BootstrapTable>
-      );
-    }
+  render() {
+          
+    const selectRowProp = {
+        mode: 'checkbox',
+        bgColor: '#b8eb92'
+    };
+    console.log(this.props.data);
+    return (
+      <BootstrapTable 
+        options={
+          {
+            noDataText : 'Sin datos',
+            deleteText: " ",
+          }
+        }
+        deleteRow={  true  } 
+        data={ this.props.data } 
+        selectRow={ selectRowProp } 
+        bordered={false}>
+          <TableHeaderColumn dataField='_id' isKey>ID</TableHeaderColumn>
+          <TableHeaderColumn dataField='name'>Nombre</TableHeaderColumn>
+      </BootstrapTable>
+    );
   }
-  export default SelectBgColorTable;
+}
+export default SelectBgColorTable;
