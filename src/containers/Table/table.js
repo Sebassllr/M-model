@@ -24,8 +24,7 @@ class SelectBgColorTable extends React.Component {
         data={ this.props.data } 
         selectRow={ selectRowProp } 
         bordered={false}>
-          <TableHeaderColumn dataField='_id' isKey>ID</TableHeaderColumn>
-          <TableHeaderColumn dataField='name'>Nombre</TableHeaderColumn>
+          <TableHeaderColumn dataField='name' isKey>Nombre</TableHeaderColumn>
       </BootstrapTable>
     );
   }

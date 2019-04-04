@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Input from "../../components/Input/input"
 import classes from './addModel.module.css';
 import Title from '../../components/Title/title';
-import Table from '../../components/Table/table';
+import Table from '../Table/table';
 import axios from 'axios';
 import { NotificationManager } from 'react-notifications';
 import Axios from 'axios';

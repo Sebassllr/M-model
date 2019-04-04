@@ -138,6 +138,7 @@ class Administrator extends Component {
             width: '100%',
             'marginBottom': '10px'
         }
+        
         let size = {
             width: "700",
             height: "357"
