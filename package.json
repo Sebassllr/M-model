@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "bpmn-js": "^3.3.0",
+    "bpmn-js-properties-panel": "^0.29.0",
+    "camunda-bpmn-moddle": "^3.2.0",
     "react": "^16.8.3",
     "react-awesome-modal": "^2.0.5",
     "react-dom": "^16.8.3",
