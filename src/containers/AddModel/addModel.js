@@ -6,8 +6,9 @@ import Table from '../../components/Table/table';
 import axios from 'axios';
 import { NotificationManager } from 'react-notifications';
 import Axios from 'axios';
-
-
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 class AddModel extends Component{
 
     state = {
@@ -15,14 +16,10 @@ class AddModel extends Component{
             name: '',
             description: '',
         },
-        activity: {
-            name: '',
-            description: '',
-            objective: '',
-        },
         childList: [],
         comboValue: -1,
         tableData: [],
+        editorState: EditorState.createEmpty()
     }
 
     inputHandler = (event, id) => {
@@ -36,17 +33,33 @@ class AddModel extends Component{
             case 2:
                 properties.inputs.description = event.target.value;
                 break;
-            case 3:
-                properties.activity.name = event.target.value;
-                break;
-            case 4:
-                properties.activity.description = event.target.value;
-                break;
-            case 5:
-                properties.activity.objective = event.target.value;
-                break;
         }
         this.setState({...properties});
+    }
+
+    onEditorStateChange = (editorState) => {
+        console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+        this.setState({
+          editorState,
+        });
+    };
+
+    placeInputOnItems = () => {
+
+        let description = this.props.edit.description;
+        if(this.props.title === 'Tecnicas'){
+            const contentBlock = htmlToDraft(this.props.edit.description);
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            description = EditorState.createWithContent(contentState);
+        }
+
+        const toEditItem = {
+            name: this.props.edit.name,
+            description: description
+        }
+
+        console.log("toEdit", toEditItem);
+        this.setState({inputs: toEditItem, editorState: description, tableData: this.props.edit.children})
     }
 
     addActivity = () => { 
@@ -63,10 +76,12 @@ class AddModel extends Component{
         this.setState(props);
     }
 
-    saveModel = async () => {
+    saveModel = () => {
         let toSendItem = {
             name: this.state.inputs.name,
-            description: this.state.inputs.description,
+            description: this.props.title === 'Tecnicas' 
+                ? draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())) 
+                : this.state.inputs.description,
             modelStr: this.props.title
         };
 
@@ -74,16 +89,22 @@ class AddModel extends Component{
             toSendItem.children = this.state.tableData.map(i => i._id);
         }
 
-        await axios.post('saveModel', toSendItem).then(response =>{
-            this.props.closeModal();
-            NotificationManager.success('Se ha guardado correctamente', 'Guardado');
+        axios.post('saveModel', toSendItem).then(response =>{
+            console.log(response);
+            if(response.status === 200){
+                this.props.closeModal();
+                NotificationManager.success('Se ha guardado correctamente', 'Guardado');
+            }
+        }).catch(error => {
+            console.error(error);
+            NotificationManager.error('Por favor ingrese el nombre! ', 'Error!');
         });
     }
 
     loadDataForCombo = () => {
         console.log('Cargando datos');
         
-        Axios.post(this.props.getChild, { modelStr: this.props.child})
+        Axios.post("getAllModelChildren", { modelStr: this.props.child})
         .then(response => {
             if(response.data.length){
                 const value = response.data[0];
@@ -105,6 +126,10 @@ class AddModel extends Component{
         if(!this.state.childList.length){
             this.loadDataForCombo();
         }
+        
+        if(this.props.edit){
+            this.placeInputOnItems();
+        }
     }
 
     addToTable = () => {
@@ -117,6 +142,9 @@ class AddModel extends Component{
         });
     }
 
+    /**
+     * Método encargado de manejar el cambio del combobox
+     */
     onChangeCombo = event => {
         console.log(event.target.value);
         this.setState({
@@ -124,13 +152,44 @@ class AddModel extends Component{
         });
     }
 
+    onEditHandler = () => {
+
+        const fullRequestItem = {
+            id: this.props.edit.id,
+            modelStr: this.props.title,
+        }
+
+        const data = {
+            name: this.state.inputs.name,
+            description: this.props.title === 'Tecnicas' 
+            ? draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())) 
+            : this.state.inputs.description,
+        }
+
+        data[this.props.childB] = this.state.tableData.map(i => i._id);
+        fullRequestItem['data'] = data;
+        console.log("data", fullRequestItem);
+        Axios.post('getModelAndUpdate', fullRequestItem)
+        .then(response => {
+            console.log(response);
+            if(response.status === 200){
+                this.props.closeModal();
+                NotificationManager.success('Se ha guardado correctamente', 'Guardado');
+            }
+        }).catch(error => {
+            console.error(error);
+            NotificationManager.error('Por favor ingrese el nombre! ', 'Error!');
+        });
+    }
+
     render(){
+        const { editorState } = this.state;
         const combo = {
             height: '23px',
             'padding': '0px 10px' 
         };
         const styles = {
-            height: '127px'
+            height: this.props.radios ? "170px": '127px',
         };
 
         const objectiveTitle = {
@@ -140,10 +199,10 @@ class AddModel extends Component{
         };
 
         const renderItems = this.props.childB ? true : false;
-
+        const isTechnique = this.props.title === 'Tecnicas' ? true : false;
         return(
             <div className={classes.grid}>
-                <form className={[classes.formGrid, classes.formPadding].join(" ")}>
+                <form className={[classes.formGrid, classes.formPadding, isTechnique ? classes.newHeight : null].join(" ")}>
                     <Title titleStyle={{
                         border: '1px solid #8e8e8e'
                     }} title={"Agregar " + this.props.title}/>
@@ -157,24 +216,48 @@ class AddModel extends Component{
                                 type="input" 
                                 required
                             />
+                            {!isTechnique ?
+                                <Input 
+                                    style={styles} 
+                                    value={this.state.inputs.description} 
+                                    onChange={(event) => {this.inputHandler(event, 2)}} 
+                                    name="Descripción"
+                                    type="textarea"
+                                /> :
+                                <Input
+                                    name="Descripción" 
+                                    type="wysiwyg"
+                                    onEditorStateChange={this.onEditorStateChange}
+                                    editorState={editorState}
+                                    value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
+                                />
+                            }{/*
                             <Input 
                                 style={styles} 
-                                value={this.state.description} 
+                                value={this.state.inputs.description} 
                                 onChange={(event) => {this.inputHandler(event, 2)}} 
                                 name="Descripción" 
-                                type="textarea"
-                            />
+                                type="wysiwyg"
+                                onEditorStateChange={this.onEditorStateChange}
+                                editorState={editorState}
+                                value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
+                            />*/}
                         </div>
                         {!renderItems? null:
-                            <div className = {classes.widthRigth}>
+                            <div className = {[classes.widthRigth, this.props.radios ? "btnW" : null, 
+                                this.props.radios ? classes.btnW : null].join(" ")}>
+                                { this.props.radios ? 
+                                    <Input name="Tipo" required type='radio' radios={this.props.radios} /> : 
+                                    null 
+                                }
                                 <div className= {["displayFlex", classes.combo].join(" ")}>
                                     <Input 
                                         value={this.state.comboValue} 
                                         onChange={this.onChangeCombo} 
-                                        style={combo} type='select' 
+                                        style={combo} 
+                                        type='select' 
                                         options={this.state.childList} 
                                         name={this.props.child} 
-                                        required
                                     />
                                     <div className={classes.button}>
                                         <button 
@@ -209,7 +292,7 @@ class AddModel extends Component{
                     ].join(" ")}>
 
                     <button className={classes.btnCancel} type="button" onClick={this.props.closeModal}>Cancelar</button>
-                    <button className={classes.btnSave} type="button" onClick={this.saveModel}>Guardar</button>
+                    <button className={classes.btnSave} type="button" onClick={this.props.edit? this.onEditHandler : this.saveModel}>Guardar</button>
                 </div>
             </div>
         )

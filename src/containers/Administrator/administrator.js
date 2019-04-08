@@ -6,7 +6,6 @@ import LeftComponent from '../../components/leftComponent/leftComponent';
 import RightComponent from '../../components/RightComponent/rightComponent';
 import Axios from 'axios';
 import 'react-notifications/lib/notifications.css';
-import { NotificationContainer } from 'react-notifications';
 
 class Administrator extends Component {
 
@@ -23,17 +22,20 @@ class Administrator extends Component {
             name: '',
             description: '',
             objective: '',
-        }
+        },
+        isEdit: false,
+        openModalAddChild: true,
     };
 
     addClickHandler = () => {
         console.log("Add");
-        this.setState({openModal: true});
+        this.setState({isEdit: false, openModal: true});
     }
 
     editClickHandler = () => {
-        console.log("Edit");
-        this.setState({openModal: true});
+        console.log(this.state.selectedNode);
+        console.log("Nodo Seleccionado", this.state.selectedNode);
+        this.setState({isEdit: true, openModal: true});
     }
 
     deleteClickHandler = () => {
@@ -54,11 +56,16 @@ class Administrator extends Component {
         }
     }
 
+    addChildrenPopUp = () => {
+
+    }
+
     /**
      * Obtiene todos los modelos creados
      */
     getAllModels = () => {
-        Axios.post(this.props.all, {modelStr: this.props.name})
+        console.log(this.props.name);
+        Axios.post("getAllModels", {modelStr: this.props.name})
         .then(response => {
             console.log(response.data);
             const models = response.data;
@@ -73,7 +80,6 @@ class Administrator extends Component {
      * Evento de click del árbol de modelos
      */
     nodeClick = (event, nodeId) => {
-        //const id = {id: nodeId, modelStr: this.props.name};
         this.selectedNode(nodeId);
     }
 
@@ -86,7 +92,7 @@ class Administrator extends Component {
         let selectedNode = {};
         newModel.forEach(i => {
             if(i._id === id){
-                selectedNode = {name: i.name, description: i.description};
+                selectedNode = {id: i._id, name: i.name, description: i.description};
                 selectedNode.children = i[this.props.childB];
                 i.selected = true;
             }else{
@@ -104,7 +110,6 @@ class Administrator extends Component {
         Axios
         .post('getAllChildren', {childStr: this.props.child, children: selectedNode.children})
         .then(response => {
-            console.log(response);
             selectedNode.children = response.data;
             this.setState({models: newModel, selectedNode: selectedNode});
         });
@@ -130,7 +135,7 @@ class Administrator extends Component {
             description: item.description,
         }
         this.setState({selectedChild: selected, showPopUp: true});
-        console.log(item);
+        console.log("Nodo Seleccionado", this.state.selectedNode);
     }
 
     render(){
@@ -142,8 +147,28 @@ class Administrator extends Component {
             width: "700",
             height: "357"
         }
+        let activities = null;
+        if(this.props.name === "Actividades"){
+            size.height = '400';
+            activities = [
+                {
+                    key: 1,
+                    value: 'Estructural',
+                    title: 'Estructural',
+                    name: 'type',
+                    checked: 'checked',
+                },
+                {
+                    key: 2,
+                    value: 'Comportamiento',
+                    title: 'Comportamiento',
+                    name: 'type'
+                }
+            ]
+        }
+        
         if(!this.props.childB){
-            size.width = '350';
+            size.height = '500';
         }
 
         return(
@@ -185,15 +210,16 @@ class Administrator extends Component {
                         {!this.state.openModal ? null:                     
                             <AddModel 
                                 childB={this.props.childB} 
-                                getChild={this.props.getChildrenData} 
                                 title={this.props.name} 
                                 child={this.props.child} 
                                 closeModal={this.closeModal}
-                                childField={this.props.childB}/>
+                                childField={this.props.childB}
+                                radios={activities}
+                                edit={this.state.isEdit ? this.state.selectedNode : null}/>
                         }
 
                 </Modal>
-                <NotificationContainer />
+                
             </div>
         )
     }

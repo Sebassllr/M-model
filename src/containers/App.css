@@ -97,6 +97,9 @@ li > a > span.text{
 .redRequired{
   color: #da0000;
 }
+.btnW .btn-warning{
+  top: 213px;
+}
 .btn-warning{
   position: absolute;
   top: 167px;

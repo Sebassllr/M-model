@@ -77,6 +77,9 @@
     "a a c b";
     height: 25px;
 }
+.btnW .tableContainer{
+    height: 129px;
+}     
 .tableContainer{
     border: 1px solid #8e8e8e;
     border-radius: 3px;
@@ -123,4 +126,10 @@ button.btnSave:hover{
 }
 .fullWidth{
     width: calc(100% - 36px);
+}
+.btnW .combo{
+    margin-top: 11px;
+}
+.newHeight{
+    height: 441px;
 }

@@ -11,7 +11,14 @@ class MainMenu extends Component {
                 to:'/admin/model',
                 text: 'Modelos',
                 selected: false,
-                child: 'objectives'
+                child: 'processes'
+            },
+            {
+                id: 5,
+                to:'/admin/processes',
+                text: 'Procesos',
+                selected: false,
+                child: 'objectives',
             },
             {
                 id: 2,

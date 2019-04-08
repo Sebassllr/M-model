@@ -7,6 +7,15 @@ div .Input{
     width: calc(100% - 15px);
     margin-left: 15px;
 }
+.radioInputs{
+    font-size: 13px;
+}
+.radioContainer{
+    margin-left: 17px;
+}
+.radioContainer > * {
+    display: flex;
+}
 div .Input:focus{
     border-color: #b0e28d;
     background: #ececec;
@@ -32,4 +41,8 @@ textarea.Input{
 }
 .Label::first-letter{
     text-transform: capitalize;
+}
+.wysi{
+    height: 300px;
+    width: 678px;
 }
