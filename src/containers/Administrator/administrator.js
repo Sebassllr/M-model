@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactModal from 'react-modal';
 import Modal from 'react-awesome-modal';
 import AddModel from '../AddModel/addModel';
 import classes from './administrator.module.css';
@@ -7,7 +6,6 @@ import LeftComponent from '../../components/leftComponent/leftComponent';
 import RightComponent from '../../components/RightComponent/rightComponent';
 import Axios from 'axios';
 import 'react-notifications/lib/notifications.css';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 class Administrator extends Component {
 
@@ -17,24 +15,27 @@ class Administrator extends Component {
         selectedNode: {
             name: "",
             description: "",
-            activities: []
+            child: []
         },
         showPopUp: false,
-        selectedActivity: {
+        selectedChild: {
             name: '',
             description: '',
             objective: '',
-        }
+        },
+        isEdit: false,
+        openModalAddChild: true,
     };
 
     addClickHandler = () => {
         console.log("Add");
-        this.setState({openModal: true});
+        this.setState({isEdit: false, openModal: true});
     }
 
     editClickHandler = () => {
-        console.log("Edit");
-        this.setState({openModal: true});
+        console.log(this.state.selectedNode);
+        console.log("Nodo Seleccionado", this.state.selectedNode);
+        this.setState({isEdit: true, openModal: true});
     }
 
     deleteClickHandler = () => {
@@ -55,11 +56,16 @@ class Administrator extends Component {
         }
     }
 
+    addChildrenPopUp = () => {
+
+    }
+
     /**
      * Obtiene todos los modelos creados
      */
     getAllModels = () => {
-        Axios.get('getAllModels')
+        console.log(this.props.name);
+        Axios.post("getAllModels", {modelStr: this.props.name})
         .then(response => {
             console.log(response.data);
             const models = response.data;
@@ -74,29 +80,39 @@ class Administrator extends Component {
      * Evento de click del árbol de modelos
      */
     nodeClick = (event, nodeId) => {
-        const id = {id: nodeId};
         this.selectedNode(nodeId);
-        Axios.post('getModelById', id)
-        .then(response => {
-            console.log(response.data);
-            const data = response.data;
-            this.setState({selectedNode: data});
-        });
     }
 
     /**
      * Método que selecciona el nodo
      */
     selectedNode = id => {
+
         const newModel = [...this.state.models];
+        let selectedNode = {};
         newModel.forEach(i => {
             if(i._id === id){
+                selectedNode = {id: i._id, name: i.name, description: i.description};
+                selectedNode.children = i[this.props.childB];
                 i.selected = true;
             }else{
                 i.selected = false;
             }
         });
-        this.setState({models: newModel});
+        if(this.props.childB){
+            this.showChild(newModel, selectedNode);    
+        }else{
+            this.setState({models: newModel, selectedNode: selectedNode});
+        }
+    }
+
+    showChild = (newModel, selectedNode)=> {
+        Axios
+        .post('getAllChildren', {childStr: this.props.child, children: selectedNode.children})
+        .then(response => {
+            selectedNode.children = response.data;
+            this.setState({models: newModel, selectedNode: selectedNode});
+        });
     }
 
     /**
@@ -112,40 +128,60 @@ class Administrator extends Component {
      * Método encargado de abrir el pop up con la información de la actividad seleccionada
      */
     openPopUp = id => {
-        console.log("Estoy acá");
-        const toSendObj = {
-            id: id
+        
+        const item = this.state.selectedNode.children.filter(i => id === i._id)[0];
+        const selected = {
+            name: item.name,
+            description: item.description,
         }
-        Axios.post(this.props.url, toSendObj)
-        .then((response) => {
-            const data = response.data;
-            const selectedActivityData  = {
-                name: data.name,
-                description: data.description,
-                objective: data.objective,
-            }
-            this.setState({
-                showPopUp: true, selectedActivity: selectedActivityData
-            });
-        });
+        this.setState({selectedChild: selected, showPopUp: true});
+        console.log("Nodo Seleccionado", this.state.selectedNode);
     }
 
     render(){
         const hrStyle = {
             width: '100%',
-            'margin-bottom': '10px'
+            'marginBottom': '10px'
+        }
+        let size = {
+            width: "700",
+            height: "357"
+        }
+        let activities = null;
+        if(this.props.name === "Actividades"){
+            size.height = '400';
+            activities = [
+                {
+                    key: 1,
+                    value: 'Estructural',
+                    title: 'Estructural',
+                    name: 'type',
+                    checked: 'checked',
+                },
+                {
+                    key: 2,
+                    value: 'Comportamiento',
+                    title: 'Comportamiento',
+                    name: 'type'
+                }
+            ]
+        }
+        
+        if(!this.props.childB){
+            size.height = '500';
         }
 
         return(
             <div className={[classes.greyBackground, classes.fullHeight, "displayFlex"].join(" ")}>
                 <LeftComponent 
+                    title={this.props.name}
                     addClick={this.addClickHandler} 
                     editClick={this.editClickHandler} 
                     deleteClick={this.deleteClickHandler}
                     buttons={this.state.buttons}
                     list={this.state.models}
                     nodeClick={this.nodeClick}
-                    />
+                />
                 <Modal 
                     visible={this.state.showPopUp}
                     width="400"
@@ -154,23 +190,37 @@ class Administrator extends Component {
                     onClickAway={() => this.closePopUp()}
                 >
                     <div className={classes.modal}>
-                        <h1>{this.state.selectedActivity.name}</h1>
+                        <h1>{this.state.selectedChild.name}</h1>
                         <hr style={hrStyle}/>
-                        <p>{this.state.selectedActivity.description}</p>
-                        <p>{this.state.selectedActivity.objective}</p>
+                        <p>{this.state.selectedChild.description}</p>
                     </div>
                 </Modal>
                 <RightComponent 
                     name={this.state.selectedNode.name} 
                     description={this.state.selectedNode.description}
-                    activities={this.state.selectedNode.activities} 
-                    showPopUp={this.openPopUp}/>
-                <ReactModal isOpen={this.state.openModal} >
-                    <AddModel closeModal={this.closeModal}/>
-                </ReactModal>
-                <NotificationContainer />
+                    children={this.state.selectedNode.children} 
+                    showPopUp={this.openPopUp}
+                    child={this.props.child}/>
+                <Modal 
+                    visible={this.state.openModal}
+                    width={size.width}
+                    height={size.height}
+                    effect="fadeInUp"
+                    >
+                        {!this.state.openModal ? null:                     
+                            <AddModel 
+                                childB={this.props.childB} 
+                                title={this.props.name} 
+                                child={this.props.child} 
+                                closeModal={this.closeModal}
+                                childField={this.props.childB}
+                                radios={activities}
+                                edit={this.state.isEdit ? this.state.selectedNode : null}/>
+                        }
+
+                </Modal>
+                
             </div>
-            
         )
     }
 }

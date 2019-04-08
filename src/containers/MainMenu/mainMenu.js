@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import classes from './mainMenu.module.css';
 
 class MainMenu extends Component {
@@ -11,24 +11,35 @@ class MainMenu extends Component {
                 to:'/admin/model',
                 text: 'Modelos',
                 selected: false,
+                child: 'processes'
+            },
+            {
+                id: 5,
+                to:'/admin/processes',
+                text: 'Procesos',
+                selected: false,
+                child: 'objectives',
             },
             {
                 id: 2,
                 to:'/admin/objectives',
                 text: 'Objetivos',
                 selected: false,
+                child: 'activities'
             },
             {
                 id: 3,
-                to:'/admin/activites',
+                to:'/admin/activities',
                 text: 'Actividades',
                 selected: false,
+                child: 'techniques'
             },
             {
                 id: 4,
-                to:'/admin/tenics',
+                to:'/admin/tecnics',
                 text: 'Técnicas',
                 selected: false,
+                child: null,
             },
         ],
     }
@@ -50,9 +61,9 @@ class MainMenu extends Component {
             <ol className={classes.list}>
                 {this.state.list.map(item => {
                     return(
-                        <Link onClick={() => this.onClick(item.id)} to={item.to}>
-                            <li className={item.selected ? classes.activated : 'Hola'}>{item.text}</li>
-                        </Link>
+                        <NavLink activeClassName={classes.active} key={item.id} onClick={() => this.onClick(item.id)} to={item.to}>
+                            <li className={item.selected ? classes.activated : null}>{item.text}</li>
+                        </NavLink>
                     );
                 })}
             </ol>

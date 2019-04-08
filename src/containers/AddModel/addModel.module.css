@@ -3,7 +3,7 @@
     margin: 1px;
 }
 .widthRigth{
-    width: calc(70% - 15px);
+    width: calc(70% - 46px);
     margin: 1px 0 1px 25px;
 }
 .border{
@@ -13,4 +13,123 @@
 .paddingInputs{
     padding: 5px 20px 5px 10px;
     margin-top: 5px;
+}
+.formGrid{
+    grid-area: a;
+}
+.table{
+    width: calc(100% - 15px);
+    margin-left: 15px;
+}
+.button{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.combo{
+    height: 50px;
+}
+.addButton{
+    background: #9bea60 url("../../resources/images/add.png") no-repeat;
+    background-size: 23px;
+    border: 1px solid #95dd5e;
+    border-radius: 4px;
+    color: white;
+    height: 25px;
+    width: 25px;
+    line-height: 11px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 15px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.addButton:hover{
+    background-color: #95dd5e;
+}
+.formPadding{
+    padding: 10px 10px;
+}
+.btnSave{
+    grid-area: b;
+}
+.formButtons{
+    justify-content: flex-end;
+    grid-area: c;
+    margin-bottom: 10px;
+    margin-top: 4px;
+    border-radius: 3px;
+}
+.grid{
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);  
+    grid-template-areas: 
+      "a"     
+      "c";
+}
+.displayGrid{
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 5px;
+    grid-template-areas: 
+    "a a c b";
+    height: 25px;
+}
+.btnW .tableContainer{
+    height: 129px;
+}     
+.tableContainer{
+    border: 1px solid #8e8e8e;
+    border-radius: 3px;
+    margin-top: 20px;
+    height: 137px;
+}
+.margin{
+    margin-top: 10px;
+}
+.bottomButtons{
+    height: 35px;
+    padding-right: 10px;
+    border-top: 1px solid rgb(142, 142, 142);
+    border-radius: 0px 0px 3px 3px;
+    background-color:  #b8b8b8ab;
+    justify-content: center;
+    align-items: center;
+}
+button.btnCancel{
+    grid-area: c;
+    border: 1px solid #a9a9a9;
+    background: #d4d4d4 url('../../resources/images/multiply.png') 4px 2px no-repeat;
+}
+button.btnCancel:hover{
+    background-color: #dddddd;
+}
+button.btnSave{
+    border: 1px solid #429c00;
+    background: #9bea60 url('../../resources/images/save.png') 4px 2px no-repeat;
+}
+button.btnSave:hover{
+    background-color: #b0fd78;
+}
+.bottomButtons > button{
+    height: min-content;
+    cursor: pointer;
+    background-size: 18px 17px;
+    font-size: 12px;
+    height: 23px;
+    width: 92px;
+    font-weight: 600;
+    border-radius: 3px;
+    padding: 0px 0 0 21px;
+}
+.fullWidth{
+    width: calc(100% - 36px);
+}
+.btnW .combo{
+    margin-top: 11px;
+}
+.newHeight{
+    height: 441px;
 }

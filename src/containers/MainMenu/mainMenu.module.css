@@ -18,13 +18,14 @@
     padding: 0;
     justify-content: center;
     align-items: center; 
+    border: 1px solid #b0e28d;
 }
 .list > a > li:hover{
     background-color: #98c27a;
 }
-.list > a > li.activated{
+.active > li, .list > a > li.activated{
     background-color: #91d65f;
-    border: 1px solid black;
+    border: 1px solid black !important;
     font-weight: 600;
     border-radius: 3px;
 }
