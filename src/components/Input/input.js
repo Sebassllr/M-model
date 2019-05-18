@@ -32,17 +32,17 @@ const input = props => {
             );
             break;
         case 'wysiwyg' :
-                    input = (
-                        <>
-                            <Editor
-                                editorState={props.editorState}
-                                wrapperClassName="wrapper-class"
-                                editorClassName="editor-class"
-                                toolbarClassName="toolbar-class"
-                                onEditorStateChange={props.onEditorStateChange}
-                            />
-                        </>
-                    );
+            input = (
+                <>
+                    <Editor
+                        editorState={props.editorState}
+                        wrapperClassName="wrapper-class"
+                        editorClassName="editor-class"
+                        toolbarClassName="toolbar-class"
+                        onEditorStateChange={props.onEditorStateChange}
+                    />
+                </>
+            );
             break;
         default: 
             input = <input className={[classes.Input, classes.width100].join(" ")} {...props}/>
