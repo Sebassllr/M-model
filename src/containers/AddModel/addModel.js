@@ -231,17 +231,7 @@ class AddModel extends Component{
                                     editorState={editorState}
                                     value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
                                 />
-                            }{/*
-                            <Input 
-                                style={styles} 
-                                value={this.state.inputs.description} 
-                                onChange={(event) => {this.inputHandler(event, 2)}} 
-                                name="Descripción" 
-                                type="wysiwyg"
-                                onEditorStateChange={this.onEditorStateChange}
-                                editorState={editorState}
-                                value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-                            />*/}
+                            }
                         </div>
                         {!renderItems? null:
                             <div className = {[classes.widthRigth, this.props.radios ? "btnW" : null, 
