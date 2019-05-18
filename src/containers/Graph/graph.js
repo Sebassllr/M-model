@@ -11,17 +11,33 @@ import camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda';
 import customModule from './custom';
 import GraphForm from './GraphForm/graphForm'
 import { is } from 'bpmn-js/lib/util/ModelUtil';
+import Axios from 'axios';
+import GraphModels from './GraphModels/graphModels';
 
 class Graph extends Component{
 
     state = {
         selectedItem: null,
-        selectedElements: []
+        selectedElements: [],
+        allModels: [],
     }
 
     modeler = null;
     
+    getAllModels = () => {
+        Axios.post("getAllModels", { modelStr: "Modelos" })
+        .then(response => {
+            console.log(response.data);
+            this.setState({
+                allModels: response.data
+            });
+        })
+    }
+
     componentDidMount = () => {
+        if(!this.state.allModels.length){
+            this.getAllModels();
+        }
         if(this.modeler == null){
             this.modeler = new BpmnModeler({
                 container: '#bpmnview',
@@ -89,13 +105,16 @@ class Graph extends Component{
                 </div>
                 <div className={[ classes.propertiesContainerWidth, classes.leftBorder ].join(" ")}>
                 {
-                    this.state.selectedElements.length === 1
-                     && <ElementProperties modeler={ this.modeler } element={ this.state.element } />
+                    this.state.selectedElements.length === 1 ? 
+                    <ElementProperties 
+                        element={ this.state.element }
+                        modeler={ this.modeler } />
+                    :
+                    this.state.allModels.length ? <GraphModels models={this.state.allModels}/>
+                    :
+                    <span>Agregue un modelo para continuar</span>
                 }
-                {
-                    ( this.state.selectedElements.length === 0 || this.state.selectedElements.length > 1 )
-                    && <span>Please select an element.</span>
-                }
+
                 </div>
             </div>
         )
@@ -116,34 +135,23 @@ function ElementProperties(props) {
     
         function updateName(type) {
             
-            const bpmnReplace = modeler.get('bpmnReplace');
-
-            let bObj = null;
-            switch(type){
-                case 1:
-                    bObj = 'bpmn:Task';
-                    break;
-                case 2:
-                    bObj = 'bpmn:ServiceTask';
-                    break;
-                case 3:
-                    bObj = 'bpmn:ScriptTask';
-                    break;
-            }
+            const modeling = modeler.get('modeling');
             element.typeIntern = type;
-            bpmnReplace.replaceElement(element, {
-                type: bObj,
+            modeling.updateProperties(element, {
+                typeIntern: type,
                 width: 35,
                 height: 35
             });
         }
     
-        function updateTopic(topic) {
+        function updateBehavior(type) {
             
             const modeling = modeler.get('modeling');
-        
+            element.structOrBehavioral = type;
             modeling.updateProperties(element, {
-                'custom:topic': topic
+                structOrBehavioral: type,
+                width: 35,
+                height: 35
             });
         }
     
@@ -206,7 +214,7 @@ function ElementProperties(props) {
         };
     
         return (
-            <GraphForm updateName={updateName} item={element}/>
+            <GraphForm updateBehavior={updateBehavior} updateName={updateName} item={element}/>
         );
     }else{
         return <></>

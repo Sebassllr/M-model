@@ -14,17 +14,27 @@ const input = props => {
             break;
         case 'select': 
             input = (<select className={[classes.Input, classes.width100].join(" ")} {...props} >
-                        {props.options.map(i => <option key={i._id} value={JSON.stringify(i)}>{i.name}</option>)}
+                        {props.options.map(i => {
+                            return (
+                                <option key={i._id} value={JSON.stringify(i)}>{i.name}</option>)}
+                            )}
                     </select>);
             break;
         case 'radio':
             input = (
                 <div className={["displayFlex", classes.radioContainer].join(" ")}>
                     {props.radios.map((i, pos) => {
+
                         return (
                             <div key={pos}>
-                                <input name={i.name} id={pos} {...props}  defaultChecked  />
-                                <label className={classes.radioInputs} htmlFor={pos}>{i.title}</label>
+                                <input onChange={props.onChange} 
+                                    name={i.name} 
+                                    id={pos} 
+                                    {...props}
+                                    value={i.key}
+                                    checked={props.selectedOption == i.key} />
+                                <label className={classes.radioInputs} 
+                                    htmlFor={pos}>{i.title}</label>
                             </div>
                         )
                     })}

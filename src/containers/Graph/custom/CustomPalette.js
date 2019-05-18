@@ -58,28 +58,14 @@ export default class CustomPalette {
     function createEvent(type) {
       return function(event) {
 
-        let businessObject = {};
-        let strType = '';
-        switch(type){
-          case 1:
-            businessObject = bpmnFactory.create('bpmn:Task');
-            strType = 'bpmn:Task';
-            break;
-          case 2:
-            businessObject = bpmnFactory.create('bpmn:ServiceTask');
-            strType = 'bpmn:ServiceTask';
-            break;
-          case 3:
-            businessObject = bpmnFactory.create('bpmn:ScriptTask');
-            strType = 'bpmn:ScriptTask';
-            break;
-        }
-
+        let businessObject = bpmnFactory.create('bpmn:Task');
         businessObject.typeIntern = type;
         
         const shape = elementFactory.createShape({
-          type: strType,
+          type: 'bpmn:Task',
           businessObject: businessObject,
+          typeIntern: type,
+          structOrBehavioral: 1,
           width: 35,
           height: 35,
         });
