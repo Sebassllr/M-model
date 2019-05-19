@@ -152,14 +152,14 @@ class Administrator extends Component {
             size.height = '400';
             activities = [
                 {
-                    key: 1,
+                    key: 'Estructural',
                     value: 'Estructural',
                     title: 'Estructural',
                     name: 'type',
                     checked: 'checked',
                 },
                 {
-                    key: 2,
+                    key: 'Comportamiento',
                     value: 'Comportamiento',
                     title: 'Comportamiento',
                     name: 'type'

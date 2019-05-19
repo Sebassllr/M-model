@@ -22,13 +22,14 @@ class GraphForm extends Component {
                 type: 'Comportamiento'
             }
         ],
-        comboValue: null,
-        selectedOption: 1
+        selectedActivity: 1,
+        comboValue: "",
+        selectedoption: 1
     };
 
     onChangeRadios = event => {
         this.setState({
-            selectedOption: event.target.value
+            selectedoption: event.target.value
         });
 
         this.props.updateBehavior(event.target.value);
@@ -43,24 +44,34 @@ class GraphForm extends Component {
         });
         const comboObj = JSON.parse(event.target.value)
         if(comboObj.hasOwnProperty('_id')){
-            console.log(comboObj._id);
-            this.props.updateName(comboObj._id);
+            this.props.updateObligatory(comboObj._id);
+        }
+    }
+
+    onChangeActivity = event => {
+        this.setState({
+            selectedActivity: event.target.value,
+        });
+        const selectedActivity = JSON.parse(event.target.value)
+        if(selectedActivity.hasOwnProperty('_id')){
+            this.props.updateName(selectedActivity.name);
         }
     }
 
     componentDidMount(){
-        if(!this.state.comboValue){
-            const valueStr = JSON.stringify(this.state.activities[0])
+        if(typeof this.state.comboValue === 'number'){
+            const valueStr = JSON.stringify(this.props.activities[0])
             this.setState({
                 comboValue: valueStr
             });
+            this.props.updateName(this.props.activities[0].name);
         }
     }
 
     render() {
         
         const options = [
-            { 
+            {
                 _id: 1,
                 name: 'Obligatoria',
             },
@@ -79,8 +90,7 @@ class GraphForm extends Component {
                 key: 1,
                 value: 'Estructural',
                 title: 'Estructural',
-                name: 'type',
-                checked: 'checked',
+                name: 'type'
             },
             {
                 key: 2,
@@ -89,13 +99,14 @@ class GraphForm extends Component {
                 name: 'type'
             }
         ]
-        
+        console.log(this.props.activities);
         return (
             <div  className={[classes.form].join(" ")}>
                 <Input 
                     type={'select'} 
-                    options={this.state.activities} 
+                    options={this.props.activities} 
                     name={'Actividad'}
+                    onChange={this.onChangeActivity}
                     />
                 <Input value={this.state.comboValue} 
                     onChange={this.onChangeCombo} 
@@ -103,7 +114,7 @@ class GraphForm extends Component {
                     name={'Obligatoriedad'} 
                     options={options}
                     />
-                <Input selectedOption={this.state.selectedOption} 
+                <Input selectedoption={this.state.selectedoption} 
                     onChange={this.onChangeRadios} 
                     style={{width: 'unset'}} 
                     name="Tipo de actividad" 

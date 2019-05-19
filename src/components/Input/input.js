@@ -24,7 +24,6 @@ const input = props => {
             input = (
                 <div className={["displayFlex", classes.radioContainer].join(" ")}>
                     {props.radios.map((i, pos) => {
-
                         return (
                             <div key={pos}>
                                 <input onChange={props.onChange} 
@@ -32,7 +31,7 @@ const input = props => {
                                     id={pos} 
                                     {...props}
                                     value={i.key}
-                                    checked={props.selectedOption == i.key} />
+                                    checked={props.selectedoption == i.key} />
                                 <label className={classes.radioInputs} 
                                     htmlFor={pos}>{i.title}</label>
                             </div>

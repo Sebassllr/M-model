@@ -20,18 +20,70 @@ class Graph extends Component{
         selectedItem: null,
         selectedElements: [],
         allModels: [],
+        addedModels: [],
+        selectedoption: "",
+        activities: [],
     }
 
     modeler = null;
     
+    onChange = (event) => {
+        this.setState({
+            selectedoption: JSON.parse(event.target.value)._id 
+        });
+    }
+
     getAllModels = () => {
         Axios.post("getAllModels", { modelStr: "Modelos" })
         .then(response => {
-            console.log(response.data);
-            this.setState({
-                allModels: response.data
+            const data = response.data;
+            if(response.data.length){
+                const liststr = data.map(item => { 
+                    console.log("uno", typeof item._id);
+                    item._id = String(item._id);
+                    console.log("dos", typeof item._id);
+                    return item;
+                });
+
+                const str = liststr[0]._id;
+                this.setState({
+                    allModels: liststr,
+                    selectedoption: str
+                });
+            }
+        });
+    }
+
+    addModel = () => {
+        let list = [...this.state.addedModels];
+        list.push(String(this.state.selectedoption));
+        console.log(list[0].toString());
+        this.setState({
+            addedModels: list,
+        }, () => {
+            this.getActivitiesFromModels();
+        });
+    }
+
+    getActivitiesFromModels = () => {
+
+        Axios.post("getActivitiesByModel", {idList: this.state.addedModels})
+        .then(response => {
+            console.log(response);
+            let res = [{_id: -1, name: "Seleccione una actividad", key: -1}];
+            const responseArray = response.data.map(i => {
+                return { 
+                    _id: i._id.id, 
+                    name: i._id.name, 
+                    key: i._id.id
+                }
             });
-        })
+            const finalArray = [...res , ...responseArray];
+            console.log(finalArray);
+            this.setState({
+                activities: finalArray,
+            })
+        });
     }
 
     componentDidMount = () => {
@@ -54,13 +106,19 @@ class Graph extends Component{
                 }
             });
             
-            this.modeler.on('selection.changed', (e) => {    
-                
-                this.setState({
-                    selectedElements: e.newSelection,
-                    element: e.newSelection[0]
-                });
-                
+            this.modeler.on('selection.changed', (e) => {
+                if(e.newSelection.length && e.newSelection[0].type === "bpmn:Task"){
+                    console.log(e.newSelection[0]);
+                    this.setState({
+                        selectedElements: e.newSelection,
+                        element: e.newSelection[0]
+                    });
+                }else{
+                    this.setState({
+                        selectedElements: [],
+                        element: null
+                    });
+                }
             });
 
             this.modeler.on('element.changed', (e) => {
@@ -106,15 +164,21 @@ class Graph extends Component{
                 <div className={[ classes.propertiesContainerWidth, classes.leftBorder ].join(" ")}>
                 {
                     this.state.selectedElements.length === 1 ? 
-                    <ElementProperties 
+                    <ElementProperties
+                        activities={ this.state.activities }
                         element={ this.state.element }
                         modeler={ this.modeler } />
                     :
-                    this.state.allModels.length ? <GraphModels models={this.state.allModels}/>
+                    this.state.allModels.length ? 
+                        <GraphModels 
+                            onChange={this.onChange}
+                            addItem={this.addModel}
+                            selectedoption={this.state.selectedoption} 
+                            models={this.state.allModels}
+                        />
                     :
                     <span>Agregue un modelo para continuar</span>
                 }
-
                 </div>
             </div>
         )
@@ -125,7 +189,8 @@ function ElementProperties(props) {
 
     let {
       element,
-      modeler
+      modeler,
+      activities
     } = props;
     
     if(modeler && element){    
@@ -133,14 +198,12 @@ function ElementProperties(props) {
             element = element.labelTarget;
         }
     
-        function updateName(type) {
+        function updateObligatory(type) {
             
             const modeling = modeler.get('modeling');
             element.typeIntern = type;
             modeling.updateProperties(element, {
                 typeIntern: type,
-                width: 35,
-                height: 35
             });
         }
     
@@ -150,26 +213,15 @@ function ElementProperties(props) {
             element.structOrBehavioral = type;
             modeling.updateProperties(element, {
                 structOrBehavioral: type,
-                width: 35,
-                height: 35
             });
         }
-    
-        function makeMessageEvent() {
-    
-            const bpmnReplace = modeler.get('bpmnReplace');
-        
-            bpmnReplace.replaceElement(element, {
-                type: element.businessObject.$type,
-                eventDefinitionType: 'bpmn:MessageEventDefinition'
-            });
-        }
-    
-        function makeServiceTask(name) {
-            const bpmnReplace = modeler.get('bpmnReplace');
-        
-            bpmnReplace.replaceElement(element, {
-                type: 'bpmn:ServiceTask'
+
+        function updateActivityName(name) {
+            
+            const modeling = modeler.get('modeling');
+            element.title = name;
+            modeling.updateProperties(element, {
+                title: name
             });
         }
     
@@ -214,7 +266,13 @@ function ElementProperties(props) {
         };
     
         return (
-            <GraphForm updateBehavior={updateBehavior} updateName={updateName} item={element}/>
+            <GraphForm 
+                updateName={updateActivityName} 
+                updateBehavior={updateBehavior} 
+                updateObligatory={updateObligatory} 
+                item={element}
+                activities={activities}
+                />
         );
     }else{
         return <></>

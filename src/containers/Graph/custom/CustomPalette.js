@@ -60,12 +60,13 @@ export default class CustomPalette {
 
         let businessObject = bpmnFactory.create('bpmn:Task');
         businessObject.typeIntern = type;
-        
+        businessObject.title = "Actividad";
         const shape = elementFactory.createShape({
           type: 'bpmn:Task',
           businessObject: businessObject,
           typeIntern: type,
           structOrBehavioral: 1,
+          title: 'Actividad',
           width: 35,
           height: 35,
         });
