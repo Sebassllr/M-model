@@ -46,9 +46,11 @@ export default class CustomPalette {
       return function(event) {
         const businessObject = bpmnFactory.create('bpmn:Task');
         businessObject.suitable = suitabilityScore;
+        businessObject.key = '';
         const shape = elementFactory.createShape({
           type: 'bpmn:Task',
-          businessObject: businessObject
+          businessObject: businessObject,
+          key: '',
         });
   
         create.start(event, shape); 
@@ -76,15 +78,6 @@ export default class CustomPalette {
     }
 
     return {
-      'create.double-line': {
-        group: 'tools',
-        className: 'custom-icon bpmn-icon-task icon-must',
-        title: translate('Double line'),
-        action: {
-          dragstart: createEvent(1),
-          click: createEvent(1),
-        }
-      },
       'create.low-task': {
         group: 'activity',
         className: 'custom-icon bpmn-icon-task icon-must',

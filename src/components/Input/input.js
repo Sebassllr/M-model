@@ -14,9 +14,12 @@ const input = props => {
             break;
         case 'select': 
             input = (<select className={[classes.Input, classes.width100].join(" ")} {...props} >
+
                         {props.options.map(i => {
                             return (
-                                <option key={i._id} value={JSON.stringify(i)}>{i.name}</option>)}
+                                <option key={i._id} value={
+                                    !i.hasOwnProperty('value') ? JSON.stringify(i) : i.value
+                                }>{i.name}</option>)}
                             )}
                     </select>);
             break;

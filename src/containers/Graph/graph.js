@@ -13,6 +13,7 @@ import GraphForm from './GraphForm/graphForm'
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 import Axios from 'axios';
 import GraphModels from './GraphModels/graphModels';
+import { NotificationManager } from 'react-notifications';
 
 class Graph extends Component{
 
@@ -39,9 +40,7 @@ class Graph extends Component{
             const data = response.data;
             if(response.data.length){
                 const liststr = data.map(item => { 
-                    console.log("uno", typeof item._id);
                     item._id = String(item._id);
-                    console.log("dos", typeof item._id);
                     return item;
                 });
 
@@ -62,6 +61,7 @@ class Graph extends Component{
             addedModels: list,
         }, () => {
             this.getActivitiesFromModels();
+            NotificationManager.success('Se ha agregado correctamente', 'Agregado');
         });
     }
 
@@ -70,19 +70,20 @@ class Graph extends Component{
         Axios.post("getActivitiesByModel", {idList: this.state.addedModels})
         .then(response => {
             console.log(response);
-            let res = [{_id: -1, name: "Seleccione una actividad", key: -1}];
+            let res = [{_id: -1, name: "Seleccione una actividad", key: -1, value: -1}];
             const responseArray = response.data.map(i => {
+                const id = i._id.id;
                 return { 
-                    _id: i._id.id, 
+                    _id: id, 
                     name: i._id.name, 
-                    key: i._id.id
+                    key: id,
+                    value: id,
                 }
             });
             const finalArray = [...res , ...responseArray];
-            console.log(finalArray);
             this.setState({
                 activities: finalArray,
-            })
+            });
         });
     }
 
@@ -108,7 +109,6 @@ class Graph extends Component{
             
             this.modeler.on('selection.changed', (e) => {
                 if(e.newSelection.length && e.newSelection[0].type === "bpmn:Task"){
-                    console.log(e.newSelection[0]);
                     this.setState({
                         selectedElements: e.newSelection,
                         element: e.newSelection[0]
@@ -216,12 +216,14 @@ function ElementProperties(props) {
             });
         }
 
-        function updateActivityName(name) {
+        function updateActivityName(obj) {
             
             const modeling = modeler.get('modeling');
-            element.title = name;
+            element.title = obj.name;
+            element.key = obj._id;
             modeling.updateProperties(element, {
-                title: name
+                title: obj.name,
+                key: obj.id,
             });
         }
     
@@ -264,7 +266,7 @@ function ElementProperties(props) {
         
             return autoPlace.append(element, shape);
         };
-    
+        console.log(element);
         return (
             <GraphForm 
                 updateName={updateActivityName} 
