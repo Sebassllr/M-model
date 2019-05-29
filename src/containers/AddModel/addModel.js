@@ -19,7 +19,8 @@ class AddModel extends Component{
         childList: [],
         comboValue: -1,
         tableData: [],
-        editorState: EditorState.createEmpty()
+        editorState: EditorState.createEmpty(),
+        selectedoption: "",
     }
 
     inputHandler = (event, id) => {
@@ -38,7 +39,6 @@ class AddModel extends Component{
     }
 
     onEditorStateChange = (editorState) => {
-        console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
         this.setState({
           editorState,
         });
@@ -58,7 +58,6 @@ class AddModel extends Component{
             description: description
         }
 
-        console.log("toEdit", toEditItem);
         this.setState({inputs: toEditItem, editorState: description, tableData: this.props.edit.children})
     }
 
@@ -87,6 +86,11 @@ class AddModel extends Component{
 
         if(this.state.childList.length){
             toSendItem.children = this.state.tableData.map(i => i._id);
+        }
+
+        if(this.props.radios){
+            console.log(this.state.selectedoption);
+            toSendItem.type = this.state.selectedoption;
         }
 
         axios.post('saveModel', toSendItem).then(response =>{
@@ -139,6 +143,12 @@ class AddModel extends Component{
         list.push({...obj, key: this.state.comboValue._id});
         this.setState({
             tableData: list,
+        });
+    }
+
+    onChangeRadios = event => {
+        this.setState({
+            selectedoption: event.target.value
         });
     }
 
@@ -237,7 +247,15 @@ class AddModel extends Component{
                             <div className = {[classes.widthRigth, this.props.radios ? "btnW" : null, 
                                 this.props.radios ? classes.btnW : null].join(" ")}>
                                 { this.props.radios ? 
-                                    <Input name="Tipo" required type='radio' radios={this.props.radios} /> : 
+                                    <Input 
+                                        name="Tipo" 
+                                        required 
+                                        type='radio' 
+                                        radios={this.props.radios} 
+                                        onChange={this.onChangeRadios}
+                                        selectedoption={this.state.selectedoption}
+                                        /> 
+                                        : 
                                     null 
                                 }
                                 <div className= {["displayFlex", classes.combo].join(" ")}>

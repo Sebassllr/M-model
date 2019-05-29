@@ -46,9 +46,11 @@ export default class CustomPalette {
       return function(event) {
         const businessObject = bpmnFactory.create('bpmn:Task');
         businessObject.suitable = suitabilityScore;
+        businessObject.key = '';
         const shape = elementFactory.createShape({
           type: 'bpmn:Task',
-          businessObject: businessObject
+          businessObject: businessObject,
+          key: '',
         });
   
         create.start(event, shape); 
@@ -58,28 +60,15 @@ export default class CustomPalette {
     function createEvent(type) {
       return function(event) {
 
-        let businessObject = {};
-        let strType = '';
-        switch(type){
-          case 1:
-            businessObject = bpmnFactory.create('bpmn:Task');
-            strType = 'bpmn:Task';
-            break;
-          case 2:
-            businessObject = bpmnFactory.create('bpmn:ServiceTask');
-            strType = 'bpmn:ServiceTask';
-            break;
-          case 3:
-            businessObject = bpmnFactory.create('bpmn:ScriptTask');
-            strType = 'bpmn:ScriptTask';
-            break;
-        }
-
+        let businessObject = bpmnFactory.create('bpmn:Task');
         businessObject.typeIntern = type;
-        
+        businessObject.title = "Actividad";
         const shape = elementFactory.createShape({
-          type: strType,
+          type: 'bpmn:Task',
           businessObject: businessObject,
+          typeIntern: type,
+          structOrBehavioral: 1,
+          title: 'Actividad',
           width: 35,
           height: 35,
         });
@@ -89,15 +78,6 @@ export default class CustomPalette {
     }
 
     return {
-      'create.double-line': {
-        group: 'tools',
-        className: 'custom-icon bpmn-icon-task icon-must',
-        title: translate('Double line'),
-        action: {
-          dragstart: createEvent(1),
-          click: createEvent(1),
-        }
-      },
       'create.low-task': {
         group: 'activity',
         className: 'custom-icon bpmn-icon-task icon-must',

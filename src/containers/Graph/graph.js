@@ -11,17 +11,86 @@ import camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda';
 import customModule from './custom';
 import GraphForm from './GraphForm/graphForm'
 import { is } from 'bpmn-js/lib/util/ModelUtil';
+import Axios from 'axios';
+import GraphModels from './GraphModels/graphModels';
+import { NotificationManager } from 'react-notifications';
 
 class Graph extends Component{
 
     state = {
         selectedItem: null,
-        selectedElements: []
+        selectedElements: [],
+        allModels: [],
+        addedModels: [],
+        selectedoption: "",
+        activities: [],
     }
 
     modeler = null;
     
+    onChange = (event) => {
+        this.setState({
+            selectedoption: JSON.parse(event.target.value)._id 
+        });
+    }
+
+    getAllModels = () => {
+        Axios.post("getAllModels", { modelStr: "Modelos" })
+        .then(response => {
+            const data = response.data;
+            if(response.data.length){
+                const liststr = data.map(item => { 
+                    item._id = String(item._id);
+                    return item;
+                });
+
+                const str = liststr[0]._id;
+                this.setState({
+                    allModels: liststr,
+                    selectedoption: str
+                });
+            }
+        });
+    }
+
+    addModel = () => {
+        let list = [...this.state.addedModels];
+        list.push(String(this.state.selectedoption));
+        console.log(list[0].toString());
+        this.setState({
+            addedModels: list,
+        }, () => {
+            this.getActivitiesFromModels();
+            NotificationManager.success('Se ha agregado correctamente', 'Agregado');
+        });
+    }
+
+    getActivitiesFromModels = () => {
+
+        Axios.post("getActivitiesByModel", {idList: this.state.addedModels})
+        .then(response => {
+            console.log(response);
+            let res = [{_id: -1, name: "Seleccione una actividad", key: -1, value: -1}];
+            const responseArray = response.data.map(i => {
+                const id = i._id.id;
+                return { 
+                    _id: id, 
+                    name: i._id.name, 
+                    key: id,
+                    value: id,
+                }
+            });
+            const finalArray = [...res , ...responseArray];
+            this.setState({
+                activities: finalArray,
+            });
+        });
+    }
+
     componentDidMount = () => {
+        if(!this.state.allModels.length){
+            this.getAllModels();
+        }
         if(this.modeler == null){
             this.modeler = new BpmnModeler({
                 container: '#bpmnview',
@@ -38,13 +107,18 @@ class Graph extends Component{
                 }
             });
             
-            this.modeler.on('selection.changed', (e) => {    
-                
-                this.setState({
-                    selectedElements: e.newSelection,
-                    element: e.newSelection[0]
-                });
-                
+            this.modeler.on('selection.changed', (e) => {
+                if(e.newSelection.length && e.newSelection[0].type === "bpmn:Task"){
+                    this.setState({
+                        selectedElements: e.newSelection,
+                        element: e.newSelection[0]
+                    });
+                }else{
+                    this.setState({
+                        selectedElements: [],
+                        element: null
+                    });
+                }
             });
 
             this.modeler.on('element.changed', (e) => {
@@ -89,12 +163,21 @@ class Graph extends Component{
                 </div>
                 <div className={[ classes.propertiesContainerWidth, classes.leftBorder ].join(" ")}>
                 {
-                    this.state.selectedElements.length === 1
-                     && <ElementProperties modeler={ this.modeler } element={ this.state.element } />
-                }
-                {
-                    ( this.state.selectedElements.length === 0 || this.state.selectedElements.length > 1 )
-                    && <span>Please select an element.</span>
+                    this.state.selectedElements.length === 1 ? 
+                    <ElementProperties
+                        activities={ this.state.activities }
+                        element={ this.state.element }
+                        modeler={ this.modeler } />
+                    :
+                    this.state.allModels.length ? 
+                        <GraphModels 
+                            onChange={this.onChange}
+                            addItem={this.addModel}
+                            selectedoption={this.state.selectedoption} 
+                            models={this.state.allModels}
+                        />
+                    :
+                    <span>Agregue un modelo para continuar</span>
                 }
                 </div>
             </div>
@@ -106,7 +189,8 @@ function ElementProperties(props) {
 
     let {
       element,
-      modeler
+      modeler,
+      activities
     } = props;
     
     if(modeler && element){    
@@ -114,54 +198,32 @@ function ElementProperties(props) {
             element = element.labelTarget;
         }
     
-        function updateName(type) {
-            
-            const bpmnReplace = modeler.get('bpmnReplace');
-
-            let bObj = null;
-            switch(type){
-                case 1:
-                    bObj = 'bpmn:Task';
-                    break;
-                case 2:
-                    bObj = 'bpmn:ServiceTask';
-                    break;
-                case 3:
-                    bObj = 'bpmn:ScriptTask';
-                    break;
-            }
-            element.typeIntern = type;
-            bpmnReplace.replaceElement(element, {
-                type: bObj,
-                width: 35,
-                height: 35
-            });
-        }
-    
-        function updateTopic(topic) {
+        function updateObligatory(type) {
             
             const modeling = modeler.get('modeling');
-        
+            element.typeIntern = type;
             modeling.updateProperties(element, {
-                'custom:topic': topic
+                typeIntern: type,
             });
         }
     
-        function makeMessageEvent() {
-    
-            const bpmnReplace = modeler.get('bpmnReplace');
-        
-            bpmnReplace.replaceElement(element, {
-                type: element.businessObject.$type,
-                eventDefinitionType: 'bpmn:MessageEventDefinition'
+        function updateBehavior(type) {
+            
+            const modeling = modeler.get('modeling');
+            element.structOrBehavioral = type;
+            modeling.updateProperties(element, {
+                structOrBehavioral: type,
             });
         }
-    
-        function makeServiceTask(name) {
-            const bpmnReplace = modeler.get('bpmnReplace');
-        
-            bpmnReplace.replaceElement(element, {
-                type: 'bpmn:ServiceTask'
+
+        function updateActivityName(obj) {
+            
+            const modeling = modeler.get('modeling');
+            element.title = obj.name;
+            element.key = obj._id;
+            modeling.updateProperties(element, {
+                title: obj.name,
+                key: obj.id,
             });
         }
     
@@ -204,9 +266,15 @@ function ElementProperties(props) {
         
             return autoPlace.append(element, shape);
         };
-    
+        console.log(element);
         return (
-            <GraphForm updateName={updateName} item={element}/>
+            <GraphForm 
+                updateName={updateActivityName} 
+                updateBehavior={updateBehavior} 
+                updateObligatory={updateObligatory} 
+                item={element}
+                activities={activities}
+                />
         );
     }else{
         return <></>

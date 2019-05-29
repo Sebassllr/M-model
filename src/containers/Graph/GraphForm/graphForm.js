@@ -22,8 +22,37 @@ class GraphForm extends Component {
                 type: 'Comportamiento'
             }
         ],
-        comboValue: {},
+        selectedActivity: -1,
+        comboValue: "",
+        selectedoption: 1,
     };
+
+            
+    options = [
+        {
+            _id: 1,
+            name: 'Obligatoria',
+            value: 1,
+        },
+        { 
+            _id: 2,
+            name: 'Flexible',
+            value: 2,
+        },
+        { 
+            _id: 3,
+            name: 'Opcional',
+            value: 3,
+        }
+    ];
+
+    onChangeRadios = event => {
+        this.setState({
+            selectedoption: event.target.value
+        });
+
+        this.props.updateBehavior(event.target.value);
+    }
 
     /**
      * Método encargado de manejar el cambio del combobox
@@ -32,34 +61,84 @@ class GraphForm extends Component {
         this.setState({
             comboValue: event.target.value,
         });
-        console.log(this.state.comboValue);
-        const comboObj = JSON.parse(this.state.comboValue)
-        if(comboObj.hasOwnProperty('_id')){
-            this.props.updateName(comboObj._id);
+        console.log(event.target.value);
+        this.props.updateObligatory(Number(event.target.value));
+        /*const item = this.options.filter(item => item._id == event.target.value);
+        if(item.length){
+            
+        }*/
+    }
+
+    onChangeActivity = event => {
+        this.setState({
+            selectedActivity: event.target.value,
+        });
+
+        const item = this.props.activities.filter(item => item._id == event.target.value);
+        console.log(item);
+        if(item.length){
+            this.props.updateName(item[0]);
+        }
+    }
+
+    componentDidMount(){/*
+        if(this.props.activities.length && this.props.item.key !== -1){
+            const valueStr = this.props.activities[0];
+            this.setState({
+                comboValue: valueStr
+            });
+            this.props.updateName(this.props.activities[0].name);
+        }*/
+        if(this.props.item){
+            console.log(this.props.item);
+            this.setState({
+                selectedActivity: this.props.item.key,
+                comboValue: this.props.item.typeIntern,
+                selectedoption: this.props.item.structOrBehavioral,
+            })
         }
     }
 
     render() {
         
-        const options = [
-            { 
-                _id: 1,
-                name: 'Obligatoria',
+        const radios = [
+            {
+                key: 1,
+                value: 'Estructural',
+                title: 'Estructural',
+                name: 'type'
             },
-            { 
-                _id: 2,
-                name: 'Flexible',
-            },
-            { 
-                _id: 3,
-                name: 'Opcional',
+            {
+                key: 2,
+                value: 'Comportamiento',
+                title: 'Comportamiento',
+                name: 'type'
             }
-        ];         
-        
+        ]
+        console.log(this.props.activities);
         return (
             <div  className={[classes.form].join(" ")}>
-                <Input type={'select'} options={this.state.activities} name={'Actividad'}/>
-                <Input value={this.state.comboValue} onChange={this.onChangeCombo} type={'select'} name={'Tipo'} options={options}/>
+                <Input 
+                    type={'select'} 
+                    options={this.props.activities} 
+                    name={'Actividad'}
+                    value={ this.state.selectedActivity }
+                    onChange={this.onChangeActivity}
+                    />
+                <Input 
+                    value={this.state.comboValue} 
+                    onChange={this.onChangeCombo} 
+                    type={'select'} 
+                    name={'Obligatoriedad'} 
+                    options={this.options}
+                    />
+                <Input selectedoption={this.state.selectedoption} 
+                    onChange={this.onChangeRadios} 
+                    style={{width: 'unset'}} 
+                    name="Tipo de actividad" 
+                    type={'radio'} 
+                    radios={radios}
+                    />
             </div>
         )
     }
