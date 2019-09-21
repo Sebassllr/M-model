@@ -103,13 +103,13 @@ class GraphForm extends Component {
         
         const radios = [
             {
-                key: 1,
+                key: 2,
                 value: 'Estructural',
                 title: 'Estructural',
                 name: 'type'
             },
             {
-                key: 2,
+                key: 1,
                 value: 'Comportamiento',
                 title: 'Comportamiento',
                 name: 'type'
