@@ -13,7 +13,7 @@
     "draftjs-to-html": "^0.8.4",
     "html-to-draftjs": "^1.4.0",
     "bpmn-js": "^3.3.0",
-    "bpmn-js-properties-panel": "^0.29.0",
+    "bpmn-js-properties-panel": "^0.31.0",
     "camunda-bpmn-moddle": "^3.2.0",
     "react": "^16.8.3",
     "react-awesome-modal": "^2.0.5",
